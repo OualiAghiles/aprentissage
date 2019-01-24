@@ -19,7 +19,7 @@ section.section
           a.is-active all
           a public
           a private
-        a.panel-block(v-for='todo in todos', :class="{'completed': todo.completed}")
+        a.panel-block(v-for='todo in filtredTodos', :class="{'completed': todo.completed}")
           span.panel-icon
             label.checkbox
               input(type='checkbox', v-model="todo.completed" )
@@ -29,24 +29,24 @@ section.section
           nav.breadcrumb.is-small(aria-label='breadcrumbs', style="margin: auto;")
             ul
               li
-                a(href='#')
+                a(href='#' @click.prevent="filter = 'all'")
                   span.icon.is-small
                     i.fas.fa-home(aria-hidden='true')
                   span  All ( {{allTodos}} )
               li
-                a(href='#')
+                a(href='#' @click.prevent="filter = 'remaining'")
                   span.icon.is-small
                     i.fas.fa-list(aria-hidden='true')
                   span remaining
                   span.strong ( {{remaining}} )
               li
-                a(href='#')
+                a(href='#' @click.prevent="filter = 'done'")
                   span.icon.is-small
                     i.fas.fa-check(aria-hidden='true')
                   span completed
                   span.strong ( {{ doneTodo }} )
-              li.is-active
-                a(href='#')
+              li
+                a(href='#', @click.prevent="removeCompleted")
                   span.icon.is-small
                     i.fas.fa-trash(aria-hidden='true')
                   span clear
@@ -66,6 +66,7 @@ export default {
         completed: false,
       }],
       newTodo: '',
+      filter: 'all',
     };
   },
   methods: {
@@ -86,6 +87,19 @@ export default {
     },
     doneTodo() {
       return this.todos.filter(todo => todo.completed).length;
+    },
+    filtredTodos() {
+      if (this.filter === 'remaining') {
+        return this.todos.filter(todo => !todo.completed);
+      }
+      if (this.filter === 'done') {
+        return this.todos.filter(todo => todo.completed);
+      } else {
+        return this.todos;
+      }
+    },
+    removeCompleted() {
+      return console.log('cleared');
     },
   },
 };
